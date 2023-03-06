@@ -1,15 +1,18 @@
 package lambda;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.lang.Math;
+import java.util.function.Supplier;
 
 public class Main {
     public static void main(String[] args) {
         task1();
         task2();
         task3();
+        task4();
+
     }
 
     /*
@@ -30,8 +33,9 @@ public class Main {
         System.out.println(predicate.test(-5));
         System.out.println(predicate.test(5));
 
-
-
+        Predicate<Integer> predicate1 = x -> x >= 0;
+        System.out.println(predicate1.test(5));
+        System.out.println(predicate1.test(-5));
     }
 
     /*
@@ -71,4 +75,40 @@ public class Main {
         Function<Double, Long> function1 = d -> Math.round(d);
         System.out.println(function1.apply(5.7));
     }
+
+    /*
+     * Напишите Supplier, который возвращает случайное число из диапазона от 0 до 100.
+     */
+    public static void task4() {
+        System.out.println("Задача 4");
+        Supplier<Integer> supplier = new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                Integer integer = (int) (Math.random() * 100);
+                return integer;
+            }
+        };
+        System.out.println(supplier.get());
+
+        Supplier<Integer> supplier1 = () -> (int) (Math.random() * 100);
+        System.out.println(supplier1.get());
+    }
+
+    /*
+     * Дан предикат condition и две функции: ifTrue и ifFalse. Напишите метод ternaryOperator, который из предиката и
+     * двух функций построит новую функцию, возвращающую значение функции ifTrue, если предикат выполнен, а в остальных
+     *  случаях — ifFalse.
+     */
+    public static <T, U> Function<T, U> ternaryOperator(
+            Predicate<? super T> condition,
+            Function<? super T, ? extends U> ifTrue,
+            Function<? super T, ? extends U> ifFalse) {
+        return (T x) -> {
+            if (condition.test(x)) {
+                return ifTrue.apply(x);
+            } else
+                return ifFalse.apply(x);
+        };
+    }
+
 }
